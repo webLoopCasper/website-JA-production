@@ -1,24 +1,26 @@
-import Image from "next/image";
-async function test(){
-  
-   
-fetch("http://127.0.0.1:1337/api/home-page", {
-  method: "GET",
-  headers: {
-    'Content-Type': 'application/json', 
-    
-  },
-})
-  .then(response => response.text())
-  .then(data => console.log(data))
-  .catch(error => console.error('Der opstod en json fejl ved fetching:', error));
+
+import { Button } from "@/components/ui/button";
+async function getStrapiData(path){
+  const baseUrl = "http://127.0.0.1:1337";
+  try{
+    const response = await fetch(baseUrl+path);
+    const data = await response.json();
+    return data;
+  }catch(error){
+    console.error(error);
+  }
 }
+
 export default async function Home() {
-  const data = await test();
+ 
+  const strapiData = await getStrapiData("/api/home-page");
+  const { Title, description } = strapiData.data.attributes;
+  console.log(strapiData);
   return (
     <div>
-        <p>hej {data}</p> 
-        {console.log(data)}
+        <h1>{Title}</h1> 
+       <p>{description}</p>
+       <Button>Click me</Button>
     </div>
   ); 
 }
